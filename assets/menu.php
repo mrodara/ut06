@@ -5,6 +5,7 @@
         <a href="#" class="btn btn-info btn-lg">sesion1</a>
         <a href="#" class="btn btn-info btn-lg">sesion2</a>
         <a href="#" class="btn btn-info btn-lg">sesion3</a>
+        <a href="actividad/src/" class="btn btn-info btn-lg">actividad</a>
         
     </div>
 </div>
