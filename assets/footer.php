@@ -5,5 +5,6 @@
 </main>
         
     <script src="./js/bootstrap.js"></script>
+    <script src="../js/prims.js"></script>
 </body>
 </html>
