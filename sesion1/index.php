@@ -22,6 +22,7 @@
             <li class="list-group-item"><a href="index.php#example-2">Ejemplo 2. Creación de BD</a></li>
             <li class="list-group-item"><a href="index.php#example-3">Ejemplo 3. Creación de tablas</a></li>
             <li class="list-group-item"><a href="index.php#example-4"> Ejemplo 4. Eliminar BD</a></li>
+            <li class="list-group-item"><a href="index.php#example-5"> Ejemplo 5. Establecer la BD y abstraer la conexión en un único fichero</a></li>
         </ul>
 
 
@@ -275,5 +276,108 @@
         <a href="ej3.php" target="_blank" class="btn btn-info btn-lg">Pruebalo tu mismo</a>
 
     </section>
+    <hr>
+    <hr>
+    <br>
+
+
+    <!--   *************************************** ----->
+    <!--   EJEMPLO 4 - Eliminar Tablas y BD   ----->
+    <!--   ***************************************  ----->
+
+    <section id="example-4">
+        <h2> <code>Ejemplo 4 </code>- Eliminar Tablas y BD</h2>
+       
+        <p>
+        De igual forma que podemos crear bases de datos la función 
+        <a href="https://www.php.net/manual/es/mysqli.query.php" target="_blank">mysqli_query </a>  
+        nos permitirá borrar tablas de una base de datos o una base de datos completa utilizando el propio lenguaje SQL. 
+        Recuerda que para poder borrar una base de datos o sus tablas el usuario que empleamos en la conexión debe tener
+        permisos para hacerlo. Puedes alterar los privilegios del usuario desde phpMyAdmin o ejecutando los siguientes comandos
+        </p>
+        <pre>
+        <code class="language-bash">
+        mysql –u root -p
+        GRANT CREATE, SELECT, DROP,  FILE ON *.* TO 'usr_iaw'@'localhost'
+        </code>
+        </pre>
+
+        En los siguientes ejemplos te mostramos el código que permite eliminar la tabla <code> MyGuests </code> previamente creada
+        y la base de datos <code>myDB </code>.
+        
+        <pre>
+        <code class="language-php">
+        // Eliminar Base de datos
+        include_once("config.php");
+        $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
+        $sql = "DROP DATABASE myDB";
+        if ($conn->query($sql) === TRUE) {
+            echo "Table MyGuests deleted successfully";
+        } else {
+            echo "Error deleted table: " . $conn->error;
+        }
+        </code>
+        </pre>
+        <a href="ej4-delete-table.php" target="_blank" class="btn btn-danger btn-lg">Pruebalo tu mismo</a>
+        
+        
+        <pre>
+        <code class="language-php">
+        // Eliminar Base de datos
+        include_once("config.php");
+        $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
+        $sql = "DROP DATABASE myDB";
+        if ($conn->query($sql) === TRUE) {
+            echo "Table MyGuests deleted successfully";
+        } else {
+            echo "Error deleted table: " . $conn->error;
+        }
+        </code>
+        </pre>
+        <a href="ej4-delete-db.php" target="_blank" class="btn btn-danger btn-lg">Pruebalo tu mismo</a>
+
+    </section>
+    <hr>
+    <hr>
+    <br>
+
+
+     <!--   *************************************** ----->
+    <!--   EJEMPLO 5 - Establecer la BD y abstraer la conexión en un único fichero  ----->
+    <!--   ***************************************  ----->
+
+    <section id="example-5">
+        <h2> <code>Ejemplo 5 </code>- Establecer la BD y abstraer la conexión en un único fichero</h2>
+        <p>
+        El constructor de mysqli o <a href="https://www.php.net/manual/es/mysqli.construct.php" target="_blank">mysqli_connect</a>  disponen debug_backtrace
+        un párametro opcional que permite establecer la BD sin necesidad de utilizar la función <code> mysqli_select_db </code>
+        que vimos anteriormente. Esto puede ser util cuando siempre trabajamos con la misma BD. De esta forma podriamos modificar 
+        el fichero anteriormente creado config.php para añadir lo siguiente:
+        
+        <pre>
+        <code class="language-php">
+        // Definición de las Variables de conexión con el SGBD
+        define('DB_HOST', 'localhost');
+        define('DB_USER', 'usr_iaw');
+        define('DB_PASSWORD', 'psw_iaw');
+        define('DB_NAME', 'psw_iaw');
+        // Conexión con la BD
+        $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD,DB_NAME); 
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        echo "Connected successfully";
+        </code>
+        </pre>
+
+       <p> 
+        De esta forma cuando en un archivo php de nuestra aplicación necesitamos establecer conexión con la BD
+        solo sera necesario importar un unico fichero. Este fichero suele denominarse <code>db.php</code> o <code>config.php</code>.
+       </p>
+        
+        <a href="ej5.php" target="_blank" class="btn btn-info btn-lg">Pruebalo tu mismo</a>
+
+    </section>
+
 
 </div>
