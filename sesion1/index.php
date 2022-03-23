@@ -310,7 +310,7 @@
         // Eliminar Base de datos
         include_once("config.php");
         $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
-        $sql = "DROP DATABASE myDB";
+        $sql = "DROP TABLE myDB";
         if ($conn->query($sql) === TRUE) {
             echo "Table MyGuests deleted successfully";
         } else {
@@ -326,7 +326,7 @@
         // Eliminar Base de datos
         include_once("config.php");
         $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
-        $sql = "DROP DATABASE myDB";
+        $sql = "DROP DATABASE MyGuests";
         if ($conn->query($sql) === TRUE) {
             echo "Table MyGuests deleted successfully";
         } else {
