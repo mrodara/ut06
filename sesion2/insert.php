@@ -35,7 +35,7 @@
 
     include '../../assets/header.php'; 
 
-    include '../../assets/menu.php';
+    include '../assets/menu.php';
 
     
 ?>
@@ -73,6 +73,6 @@
     </div>
 </main>
         
-    <script src="../../js/bootstrap.js"></script>
+    <script src="../js/bootstrap.js"></script>
 </body>
 </html>

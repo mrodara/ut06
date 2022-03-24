@@ -132,70 +132,174 @@
         }
         </code>
         </pre>
-
         
         <a href="https://www.php.net/manual/es/function.include-once.php" target="_blank">Documentación include_once</a>
 
         <hr>
         <br>
-        <h6> <code> ## </code>Cerrar conexiones con el SGBD </h6>
-        <p>
-            Otra recomendación es cerrar la conexiones abiertas con nuestro SGBD.
-            Una conexión abierta se cierra automáticamente después de un cierto tiempo de inactividad, pero si se cierra de forma manual
-            se esta soltando el sokect y se libera al sistema de mantener una acción hasta que se cierre.
-        </p>
-        <p>
-            Esto se realiza de la siguiente forma:
-        </p>
-
-        <pre>
-        <code class="language-php">
-        // Procedimental
-        mysqli_close($conn);
-        // POO
-        $conn->close();
-        </code>
-        </pre>
-        <a href="https://www.php.net/manual/es/mysqli.close.php" target="_blank">Documentación mysqli_close</a>
+        
     </section>
     <hr>
     <hr>
 
-    <!--   *************************************** ----->
-    <!--   EJEMPLO 2 - Crear BD   ----->
-    <!--   ***************************************  ----->
+    <!--   ***************************************             ----->
+    <!--   EJEMPLO 2 - Obtener Registros de la Base de Datos   ----->
+    <!--   ***************************************             ----->
 
     <section id="example-2">
-        <h2> <code>Ejemplo 2 </code>- Creación de base de datos desde PHP</h2>
+        <h2> <code>Ejemplo 2 </code>- Obtener los registros de la base de datos (Productos)</h2>
         <p>
-            Una vez disponemos de una conexión abierta con el SGBD podemos realizar operaciones sobre la misma.
-            La primera de las operaciones que realizaremos será la de crear una nueva base de datos.
-            Esto lo realizaremos haciendo uso de
-            <a href="https://www.php.net/manual/es/mysqli.query.php" target="_blank">mysqli_query </a> podemos ver un ejemplo
-            en el siguiente código:
+            Vamos a realizar un listado de todos los productos que tenemos en nuestra Base de datos podemos ver un ejemplo
+            en el siguiente código (ya haciendo uso de funciones definidas por nosotros):
         </p>
-
-
 
         <pre>
         <code class="language-php">
-            include_once("config.php");
-            // Crear la conexión
-            $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD);
-            $sql = "CREATE DATABASE IF NOT EXISTS myDB";
-            if ($conn->query($sql) === TRUE) {
-                echo "Database created successfully";
-            } else {
-                echo "Error creating database: " . $conn->error;
-            }
-            $conn->close();
+        //Realizamos la conexión con nuestra BBDD como siempre
+        include_once("./conexion.php");
+
+        function obtenerProductos($conexion){
+            
+            //Ejecutamos la sentencia SELECT deseada
+            $productos = mysqli_query($conexion, "SELECT * FROM producto ORDER BY nombre;");
+
+            //Cerramos la conexión
+            $conexion->close();
+
+            //retornamos los resultados
+            return $productos;
+
+        }
         </code>
         </pre>
-        <a href="ej2.php" target="_blank" class="btn btn-info btn-lg">Pruebalo tu mismo</a>
+        <p>
+            Una vez obtenidos los resultados, tendremos que recorrer cada fila e imprimirla en pantalla:
+        </p>
+        <pre>
+            <code class="languege-php">
+            //Llamamos a la función para obtener los resultados
+            $resultado = obtenerProductos($conexion);
 
-        <p> <code>mysqli_query</code> retorna false en caso de error. Si una consulta del tipo SELECT, SHOW, DESCRIBE o EXPLAIN es exitosa, mysqli_query()
-         retornará un objeto <code>mysqli_result </code>. Para otras consultas exitosas de mysqli_query() retornará true.
-    </p>
+            //Comprobamos que se ha traido resultados para mostrar
+            if (isset($resultado)){
+                
+                //Definimos la estructura de la tabla
+                echo "<table class='table table-light table-striped table-hover'>
+                        <thead><tr><th>ID</th><th>Nombre</th><th>Precio</th></tr></thead><tbody>";
+
+                //Recorremos el resultado con fetch_assoc() que me dará un array asociativo, también
+                //se puede usar fetc_array() con un resultado similar.
+                while($producto = $resultado->fetch_assoc()){
+                    //Añadimos una fila a la tabla por cada producto
+                    echo "<tr><td>" .$producto["codigo"]. "</td><td>". $producto["nombre"]. 
+                        "</td><td>". number_format($producto["precio"],2,",",".") ." €" ."</td></tr>";
+                        
+                }
+
+                //Cerramos la estructura de tabla
+                echo "</tbody></table>";
+
+            }else{
+
+                echo "La consulta no ha generado resultados";
+            }
+            </code>
+        </pre>
+        <p> <code>fetch_assoc()</code> Obtiene una fila de resultado como un array asociativo </p>
+        <br><br>
+        <a href="getproductos.php" target="_blank" class="btn btn-info btn-lg">Obtener listado de productos</a>
+        <br><br>    
+        <a href="https://www.php.net/manual/es/mysqli-result.fetch-assoc.php" target="_blank">Documentación fetch_assoc()</a>
+
+        <br><br>
+        <h2> <code>Ejemplo 2 - Variante </code>- Obtener los registros de la base de datos (Productos) por fabricante</h2>
+        <p>
+            Vamos a realizar un listado de todos los productos que tenemos en nuestra Base de datos esta vez especificando 
+            los correspondientes a un determinado fabricante (de nuevo haciendo uso de funciones definidas por nosotros):
+        </p>
+        <pre>
+            <code class="language-php">
+            //Realizamos la conexión con nuestra BBDD como siempre
+            include_once("./conexion.php");
+
+            function obtenerProductosFabricante($conexion, $fabricante){
+                
+                //Preparamos la consulta
+                $sql = "SELECT * FROM producto WHERE codigo_fabricante=" .$fabricante ." ORDER BY nombre;";
+
+                //Ejecutamos la sentencia SELECT deseada
+                $productos = $conexion->query($sql);
+
+                //Cerramos la conexión
+                $conexion->close();        
+
+                //retornamos los resultados
+                return $productos;
+
+            }
+
+            function obtenerFabricantes($conexion){
+                //Creamos nuestra sentencia y la ejecutamos
+                $fabricantes = mysqli_query($conexion,"SELECT codigo, nombre FROM fabricante ORDER BY codigo;");
+
+                //Retornamos los resultados
+                return $fabricantes;
+            }   
+
+            </code>
+        </pre>
+        <p>Usamos un formulario con un select y lo rellenamos con los resultados de los fabricantes</p>
+        <pre>
+            <code class="languaje-php">
+            //Llamamos a la función
+            $fabricantes = obtenerFabricantes($conexion);
+
+            //Rellenamos el select con los resultados
+            if(isset($fabricantes)){
+                while($opcion = $fabricantes->fetch_assoc()){
+                    echo "<option value='" .$opcion['codigo']. "'>" . $opcion['nombre'] ."</option>";
+                }
+            }
+            </code>
+        </pre>
+
+        <p>Rellenamos la tabla con los resultados de la consulta por fabricante</p>
+        <pre>
+            <code class="language-php">
+            //Comprobamos que haya un fabricante para consultar sus productos
+            if(isset($_POST['txtFabricante'])){
+
+                //Llamamos a la función para obtener los resultados
+                $resultado = obtenerProductosFabricante($conexion,$_POST['txtFabricante']);
+
+                echo var_dump($resultado);
+
+                //Comprobamos que se ha traido resultados para mostrar
+                if (isset($resultado)){
+                    
+                    //Definimos la estructura de la tabla
+                    echo "<table class='table table-light table-striped table-hover'>
+                            <thead><tr><th>ID</th><th>Nombre</th><th>Precio</th></tr></thead><tbody>";
+
+                    //Recorremos el resultado con fetch_assoc() que me dará un array asociativo, también
+                    //se puede usar fetc_array() con un resultado similar.
+                    while($producto = $resultado->fetch_assoc()){
+                        //Añadimos una fila a la tabla por cada producto
+                        echo "<tr><td>" .$producto["codigo"]. "</td><td>". $producto["nombre"]. 
+                            "</td><td>". number_format($producto["precio"],2,",",".") ." €" ."</td></tr>";
+                            
+                    }
+
+                    //Cerramos la estructura de tabla
+                    echo "</tbody></table>";
+
+                }else{
+
+                    echo "La consulta no ha generado resultados";
+                }
+            }
+            </code>
+        </pre>
     </section>
 
     <hr>
