@@ -306,67 +306,50 @@
     <hr>
 
     <!--   *************************************** ----->
-    <!--   EJEMPLO 3 - Crear Tablas   ----->
+    <!--   EJEMPLO 3 - Actualizar registros   ----->
     <!--   ***************************************  ----->
 
     <section id="example-3">
-        <h2> <code>Ejemplo 3 </code>- Creación de tablas desde PHP</h2>
-        <h5> Selección de base de datos </h5>
+        <h2> <code>Ejemplo 3 </code>- Actualizar registros en la BBDD</h2>
+        <h5> Vamos a realizar la actualización del precio de un artículo </h5>
         <p>
-            Es importante definir la BD sobre la que estamos trabajando, para esto msqli dispone del método 
-            <a href="https://www.php.net/manual/es/mysqli.select-db.php" target="_blank">mysqli_select_db </a> 
-            Recuerda que esto es necesario si en la cadena de conexión mediante  <code>mysqli_connect</code> no se indicó el 
-            parámetro opcional que especifica la BD.
-
+            En este caso la sentencia que preparamos es de tipo Update y recogemos la información a través de 
+            un formulario. En el que previamente cargamos la información actual. Para ello utilizaremos el 
+            ejemplo anterior en el que traemos los registros de productos dado un fabricante (getproductosfabricante.php)
         </p>
-
-
+        <p>Al que le añadiremos dos botones de acción (editar, eliminar) que nos servirán para realizar los dos últimos
+            ejemplos de nuestro CRUD.</p>
 
         <pre>
         <code class="language-php">
-        include_once("config.php");
-        // Crear la conexión
-        $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
-        if (mysqli_select_db($conn, "myDB") === TRUE) {
-            echo "Database select successfully";
-        } else {
-            echo "Error select database: ";
-        }
+        
         </code>
         </pre>
-        <a href="ej3.php" target="_blank" class="btn btn-info btn-lg">Pruebalo tu mismo</a>
+        <a href="getproductosfabricante.php" target="_blank" class="btn btn-info btn-lg">Veamos si funciona</a>
 
         <br>
         <br>
-        <h5> Crear tablas </h5>
-        <p>
-            Para crear tablas realizaremos uso nuevamente de la función
-            <a href="https://www.php.net/manual/es/mysqli.query.php" target="_blank">mysqli_query </a> 
-        </p>
+        
 
         <pre>
         <code class="language-php">
-        include_once("config.php");
-        $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
-        // Select the database 
-        $conn->select_db("myDB"); 
-        // sql to create table
-        $sql = "CREATE TABLE MyGuests (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            firstname VARCHAR(30) NOT NULL,
-            lastname VARCHAR(30) NOT NULL,
-            email VARCHAR(50),
-            reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-            )";
-        if ($conn->query($sql) === TRUE) {
-            echo "Table MyGuests created successfully";
-        } else {
-            echo "Error creating table: " . $conn->error;
-        }
+        
         </code>
         </pre>
         <a href="ej3.php" target="_blank" class="btn btn-info btn-lg">Pruebalo tu mismo</a>
 
     </section>
-
+    
+     <!--   *************************************** ----->
+    <!--   EJEMPLO 4 - Eliminar registros   ----->
+    <!--   ***************************************  ----->
+    <section id="example-4">
+    <h2> <code>Ejemplo 4 </code>- Elimnar registros de la BBDD</h2>
+        <h5> Vamos a eliminar artículos de la tabla producto </h5>
+        <p>
+            En este caso la sentencia que preparamos es de tipo Delete y recogemos la información a través del 
+            ejemplo en el que traemos los registros de productos dado un fabricante (getproductosfabricante.php)
+        </p>
+        <p>Usaremos el botón eliminar que añadimos en el apartado anterior</p>
+    </section>
 </div>

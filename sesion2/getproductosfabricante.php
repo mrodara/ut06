@@ -44,23 +44,26 @@
                 </h3>
 
                 <form action="getproductosfabricante.php" method="post">
-                    <select class="form-select" aria-label="txtFabricante" name="txtFabricante">
-                    <option selected>Indicar un fabricante</option>
-                    <?php 
-                        //Llamamos a la función
-                        $fabricantes = obtenerFabricantes($conexion);
+                    <div class="col-md-6 mb-3">
 
-                        //Rellenamos el select con los resultados
-                        if(isset($fabricantes)){
-                            while($opcion = $fabricantes->fetch_assoc()){
-                                echo "<option value='" .$opcion['codigo']. "'>" . $opcion['nombre'] ."</option>";
+                        <select class="form-select" aria-label="txtFabricante" name="txtFabricante">
+                        <option selected>Indicar un fabricante</option>
+                        <?php 
+                            //Llamamos a la función
+                            $fabricantes = obtenerFabricantes($conexion);
+    
+                            //Rellenamos el select con los resultados
+                            if(isset($fabricantes)){
+                                while($opcion = $fabricantes->fetch_assoc()){
+                                    echo "<option value='" .$opcion['codigo']. "'>" . $opcion['nombre'] ."</option>";
+                                }
                             }
-                        }
-                    ?>
-                    </select>
+                        ?>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary">Consultar productos</button>
                 </form>
-                
+                <br><br><br>
                 <?php 
 
                     //Comprobamos que haya un fabricante para consultar sus productos
@@ -69,21 +72,22 @@
                         //Llamamos a la función para obtener los resultados
                         $resultado = obtenerProductosFabricante($conexion,$_POST['txtFabricante']);
 
-                        echo var_dump($resultado);
-
                         //Comprobamos que se ha traido resultados para mostrar
                         if (isset($resultado)){
                             
                             //Definimos la estructura de la tabla
                             echo "<table class='table table-light table-striped table-hover'>
-                                    <thead><tr><th>ID</th><th>Nombre</th><th>Precio</th></tr></thead><tbody>";
+                                    <thead><tr><th>ID</th><th>Nombre</th><th>Precio</th><th colspan='2'>Acciones</th></tr></thead><tbody>";
     
                             //Recorremos el resultado con fetch_assoc() que me dará un array asociativo, también
                             //se puede usar fetc_array() con un resultado similar.
                             while($producto = $resultado->fetch_assoc()){
                                 //Añadimos una fila a la tabla por cada producto
                                 echo "<tr><td>" .$producto["codigo"]. "</td><td>". $producto["nombre"]. 
-                                    "</td><td>". number_format($producto["precio"],2,",",".") ." €" ."</td></tr>";
+                                    "</td><td>". number_format($producto["precio"],2,",",".") ." €" .
+                                        "</td><td><a href='updateproducto.php?codigo=" .$producto['codigo'] .
+                                        "' class='btn btn-warning btn-sm'>Actualizar</a></td><td><a href='deleteproducto.php?codigo=" .
+                                        $producto['codigo'] ."' class='btn btn-danger btn-sm'>Eliminar</a></td></tr>";
                                     
                             }
     
