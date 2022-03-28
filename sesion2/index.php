@@ -322,24 +322,84 @@
 
         <pre>
         <code class="language-php">
+        //Realizamos la conexión con nuestra BBDD como siempre
+        include_once("./conexion.php");
+
         
+        /** Consultamos la información del código de producto recibido */
+        function obtenerDatosProducto($conexion, $codigo){
+            //preparamos la consulta
+            $sql = "SELECT * FROM producto WHERE codigo=" .$codigo. ";";
+
+            //Ejecutamos la sentencia SELECT
+            $producto = $conexion->query($sql);
+
+            //Cerramos la conexión
+            //$conexion->close();
+
+            //Devolvemos el resultado
+            return $producto;
+        }
+
+        function updateProducto($conexion, $codigo, $producto){
+            //Aquí vamos a usar también la consulta parametrizada 
+            
+            //Creamos nuestra sentencia
+            $sentencia = $conexion->prepare('UPDATE producto SET nombre = ?, precio = ? WHERE codigo = ?');
+            
+            //Vinculamos los parámetros
+            $sentencia->bind_param('sdi', $producto['txtNombre'], $producto['txtPrecio'], $codigo);
+            
+            //Comprobamos que se puede llevar a cabo la ejecución
+            if($sentencia->execute()){
+                //Cerramos la sentencia
+                $sentencia->close();
+
+                //cerramos la conexion
+                $conexion->close();
+
+                //Redirigimos al sitio que deseemos
+                header('Location:http://proyecto.site/ut06/sesion2/updateok.php');
+
+            }else{
+                
+                //Redirigimos a la página de error
+                header('Location:http://proyecto.site/ut06/sesion2/updateko.php');
+            }
+        
+        }
+
+        
+        //Si tenemos un código nos traemos la info de la BBDD
+        if(isset($_GET['codigo'])){
+            
+            $resultado = obtenerDatosProducto($conexion, $_GET['codigo']);
+
+            $producto = $resultado->fetch_assoc();
+            
+        }
+
         </code>
+        </pre>
+
+        <pre>
+            <code class="languaje-php">
+            //Comprobamos que se hayan modificado los datos del formulario
+            if(isset($_POST['txtNombre']) && isset($_POST['txtPrecio'])){
+                
+                //Llamamos a la función para actualizar la información
+                updateProducto($conexion, $_POST['txtCodigo'], $_POST);
+            }   
+            </code>
         </pre>
         <a href="getproductosfabricante.php" target="_blank" class="btn btn-info btn-lg">Veamos si funciona</a>
 
         <br>
         <br>
-        
-
-        <pre>
-        <code class="language-php">
-        
-        </code>
-        </pre>
-        <a href="ej3.php" target="_blank" class="btn btn-info btn-lg">Pruebalo tu mismo</a>
 
     </section>
-    
+    <hr>
+    <hr>
      <!--   *************************************** ----->
     <!--   EJEMPLO 4 - Eliminar registros   ----->
     <!--   ***************************************  ----->
@@ -350,6 +410,6 @@
             En este caso la sentencia que preparamos es de tipo Delete y recogemos la información a través del 
             ejemplo en el que traemos los registros de productos dado un fabricante (getproductosfabricante.php)
         </p>
-        <p>Usaremos el botón eliminar que añadimos en el apartado anterior</p>
+        <p>Usaremos el botón eliminar que añadimos en el apartado anterior, no se añade código para hacerlo entre todos en clase</p>
     </section>
 </div>
