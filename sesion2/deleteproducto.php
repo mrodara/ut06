@@ -3,12 +3,16 @@
     //Realizamos la conexión con nuestra BBDD como siempre
     include_once("./conexion.php");
 
+    //Definición de nuestra función para eliminar un producto
     function deleteProducto($conexion, $codigo){
 
+        //Parametrización de la sentencia
         $sentencia = $conexion->prepare("DELETE FROM producto WHERE codigo = ?");
 
+        //Vinculamos los parámetros
         $sentencia->bind_param('i', $codigo);
 
+        //Evaluamos la sentencia
         if($sentencia->execute()){
             $mensaje = "Se ha borrado correctamente el registro";
         }else{
@@ -32,7 +36,10 @@
         <div class="row">
             <div class="col-md-6">
                 <h3>
-                    <?php echo deleteProducto($conexion, $_GET['codigo']); ?>
+                    <?php 
+                        //Llamada a la función
+                        echo deleteProducto($conexion, $_GET['codigo']); 
+                    ?>
                 </h3>
 
                 
