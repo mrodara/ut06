@@ -410,7 +410,6 @@
             En este caso la sentencia que preparamos es de tipo Delete y recogemos la información a través del 
             ejemplo en el que traemos los registros de productos dado un fabricante (getproductosfabricante.php)
         </p>
-<<<<<<< HEAD
         <p>Usaremos el botón eliminar que añadimos en el apartado anterior</p>
         <pre>
             <code class="language-php">
@@ -450,8 +449,10 @@
                 echo deleteProducto($conexion, $_GET['codigo']);
             </code>
         </pre>
-=======
-        <p>Usaremos el botón eliminar que añadimos en el apartado anterior, no se añade código para hacerlo entre todos en clase</p>
->>>>>>> 778c598f52e9649eab1f2c573f88ae9952c3716a
+
+        <a href="getproductosfabricante.php" target="_blank" class="btn btn-info btn-lg">Veamos si funciona</a>
+
+        <br>
+        <br>
     </section>
 </div>
